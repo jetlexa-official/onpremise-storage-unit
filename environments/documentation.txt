@@ -1,11 +1,14 @@
 ### DEVELOPMENT ENVIRONMENT FOR LOCAL DEVELOPMENT --
 # VALUES:
 # ------------------------------------------------------------------------------
-### HOSTNAME: EndPoint of the application
+### ENDPOINT: EndPoint of the application
+### HOSTNAME: HostName of the application
 ### PORT: Port of the application
 ### LOGGER: Logger type of the application - according to morgan
 ### HTTPS_ENABLED: Enable or disable HTTPS
-### MONGO_DB_URI: MongoDb Connection URI for the application
-### JWT_SECRET: Secret for signing JWT Token
+### CURRENT_ENVIRONMENT: Indicates the current environment of the application
 ### SWAGGER_ENABLED: Enable or disable Swagger
+### FRONTEND_URL: Url of the FrontEnd
+### BACKEND_URL: Url of the BackEnd
+### API: Jetlexa Api Endpoint
 # ------------------------------------------------------------------------------
