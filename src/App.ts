@@ -61,10 +61,10 @@ app.use(helmet());
 app.use(express.json());
 
 /* EXPRESS URL ENCODED PARSER */
-/* app.use(express.urlencoded({
+app.use(express.urlencoded({
     extended: true,
     limit: '1gb'
-})); */
+}));
 
 
 /* AUTHORIZATION MIDDLEWARE */
