@@ -1,5 +1,5 @@
 {
-  "name": "api-monolith-jetlexa",
+  "name": "onpremise-storage-unit",
   "version": "1.0.0",
   "description": "Monolith API Mechanism and the services for Jetlexa.com",
   "main": "index.ts",
@@ -14,6 +14,7 @@
     "build": "npx tsc -p tsconfig.json && npx tscpaths -p tsconfig.json -s ./src -o ./build",
     "build:run": "npm run build && npm run production",
     "pm2:start": "npx pm2 start 'node build/index.js PRODUCTION'",
+    "pm2:restart": "npx pm2 restart 'node build/index.js PRODUCTION' --update-env",
     "start:production": "npm install && npm run build && npm run pm2:start",
     "lint": "tslint -c tslint.json --project tsconfig.json",
     "test": "jest --config jest.config.js",
