@@ -19,6 +19,6 @@ LOGGER: dev
 HTTPS_ENABLED: false
 CURRENT_ENVIRONMENT: production
 SWAGGER_ENABLED: false
-FRONTEND_URL: http://app.jetlexa.com
-BACKEND_URL: http://cdnservices.jetlexa.com
-API: http://subservices.jetlexa.com/api
+FRONTEND_URL: https://app.jetlexa.com
+BACKEND_URL: https://cdnservices.jetlexa.com
+API: https://subservices.jetlexa.com/api
