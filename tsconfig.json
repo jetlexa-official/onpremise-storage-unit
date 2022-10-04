@@ -1,0 +1,125 @@
+{
+    "ts-node": {
+        "transpileOnly": true,
+        "require": [
+            "typescript-transform-paths/register",
+            "tsconfig-paths/register"
+        ]
+    },
+    "compilerOptions": {
+        "target": "es2017",
+        "rootDir": "./src",
+        "moduleResolution": "node",
+        "module": "commonjs",
+        "declaration": true,
+        "inlineSourceMap": true,
+        "esModuleInterop": true,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "listEmittedFiles": false,
+        "listFiles": false,
+        "pretty": true,
+        "lib": [
+            "es2017"
+        ],
+        "types": [
+            "node"
+        ],
+        "typeRoots": [
+            "node_modules/@types",
+            "@types"
+        ],
+        "baseUrl": "./src",
+        "outDir": "./build",
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "noImplicitAny": true,
+        "removeComments": false,
+        "strict": false,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "preserveConstEnums": true,
+        "noEmit": false,
+        "paths": {
+            "@environments/*": [
+                "../environments/*"
+            ],
+            "@app": [
+                "App"
+            ],
+            "@config/*": [
+                "config/*"
+            ],
+            "@assets/*": [
+                "assets/*"
+            ],
+            "@clients/*": [
+                "clients/*"
+            ],
+            "@constants/*": [
+                "constants/*"
+            ],
+            "@database/*": [
+                "database/*"
+            ],
+            "@error/*": [
+                "error/*"
+            ],
+            "@html/*": [
+                "html/*"
+            ],
+            "@integration/*": [
+                "integration/*"
+            ],
+            "@interfaces/*": [
+                "interfaces/*"
+            ],
+            "@middlewares/*": [
+                "middlewares/*"
+            ],
+            "@modules/*": [
+                "modules/*"
+            ],
+            "@public/*": [
+                "public/*"
+            ],
+            "@routes/*": [
+                "routes/*"
+            ],
+            "@scripts/*": [
+                "scripts/*"
+            ],
+            "@services/*": [
+                "services/*"
+            ],
+            "@translations/*": [
+                "translations/*"
+            ],
+            "@utils/*": [
+                "utils/*"
+            ]
+        },
+        "plugins": [
+            {
+                "transform": "typescript-transform-paths"
+            }
+        ]
+    },
+    "include": [
+        "src/**/*",
+        "favicon",
+        "bcrypt",
+        "json2xls"
+    ],
+    "exclude": [
+        "node_modules/**"
+    ],
+    "hooks": [
+        "copy-files"
+    ],
+    "compileOnSave": false
+}

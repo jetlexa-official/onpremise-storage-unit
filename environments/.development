@@ -1,0 +1,25 @@
+### DEVELOPMENT ENVIRONMENT FOR LOCAL DEVELOPMENT --
+# VALUES:
+# ------------------------------------------------------------------------------
+### ENDPOINT: EndPoint of the application
+### HOSTNAME: HostName of the application
+### PORT: Port of the application
+### LOGGER: Logger type of the application - according to morgan
+### HTTPS_ENABLED: Enable or disable HTTPS
+### CURRENT_ENVIRONMENT: Indicates the current environment of the application
+### SWAGGER_ENABLED: Enable or disable Swagger
+### FRONTEND_URL: Url of the FrontEnd
+### BACKEND_URL: Url of the BackEnd
+### API: Jetlexa Api Endpoint
+# ------------------------------------------------------------------------------
+
+ENDPOINT: http://localhost:8081/
+HOSTNAME: http://localhost:8081/api
+PORT: 8081
+LOGGER: dev
+HTTPS_ENABLED: false
+CURRENT_ENVIRONMENT: development
+SWAGGER_ENABLED: true
+FRONTEND_URL: http://localhost:8081
+BACKEND_URL: http://localhost:8081
+API: http://localhost:80/api

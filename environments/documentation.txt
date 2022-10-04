@@ -1,0 +1,11 @@
+### DEVELOPMENT ENVIRONMENT FOR LOCAL DEVELOPMENT --
+# VALUES:
+# ------------------------------------------------------------------------------
+### HOSTNAME: EndPoint of the application
+### PORT: Port of the application
+### LOGGER: Logger type of the application - according to morgan
+### HTTPS_ENABLED: Enable or disable HTTPS
+### MONGO_DB_URI: MongoDb Connection URI for the application
+### JWT_SECRET: Secret for signing JWT Token
+### SWAGGER_ENABLED: Enable or disable Swagger
+# ------------------------------------------------------------------------------
