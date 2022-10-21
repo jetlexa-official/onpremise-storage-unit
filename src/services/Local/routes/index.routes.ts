@@ -22,9 +22,11 @@ const storage = multer.diskStorage({
         cb(null, `./files/${config?.COMPANY}/TMP`);
     },
     filename: function (req, file, cb) {
+        file.originalname = Buffer.from(file.originalname, 'latin1').toString(
+            'utf8',
+        );
         const extension = file.originalname.split('.').pop();
         const filename = file.originalname.split("." + extension)[0] + "-" + Date.now().toString() + "." + extension;
-        console.log("INTERFERENCE_FILENAME:::", filename)
         cb(null, filename);
     }
 });
