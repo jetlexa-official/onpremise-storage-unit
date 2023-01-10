@@ -20,7 +20,7 @@ import DefaultRouter from '@routes/default/index.routes';
 import Config from '@config/index.config';
 
 /* SWAGGER_GENERATOR */
-import SwaggerDocsCreator from "@middlewares/Swagger/index.swagger";
+//import SwaggerDocsCreator from "@middlewares/Swagger/index.swagger";
 
 /* Generic Error Handler */
 import GenericErrorHandler from '@error/GenericErrorHandler';
@@ -81,7 +81,7 @@ app.use('/api', ApiRouter);
 
 /* SWAGGER GENERATOR FUNCTION INVOKE */
 if (Config?.SWAGGER_ENABLED) {
-    SwaggerDocsCreator(app);
+    //SwaggerDocsCreator(app);
 }
 
 /* DEFAULT ROUTER */

@@ -111,9 +111,7 @@
     },
     "include": [
         "src/**/*",
-        "favicon",
-        "bcrypt",
-        "json2xls"
+        "favicon"
     ],
     "exclude": [
         "node_modules/**"

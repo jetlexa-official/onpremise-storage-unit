@@ -1,6 +1,6 @@
-import { Express } from 'express';
+import { Express, NextFunction, Request, Response, Application } from 'express';
 //Express Swagger Generator
-import ExpressSwaggerGenerator from 'express-swagger-producer';
+//import ExpressSwaggerGenerator from 'express-swagger-producer';
 
 /* EXPRESS SWAGGER OPTIONS */
 const swaggerOptions: object = {
@@ -40,22 +40,12 @@ const swaggerOptions: object = {
 
 //SWAGGER DATA LOAD ENABLER MIDDLEWARE FOR BROWSER
 
-const EnableSwaggerOnBrowser: { (app: Express): void } = (app: Express) => {
-    app.get("/api-docs", (req, res, next) => {
-        res.set(
-            "Content-Security-Policy",
-            "default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:;"
-        )
-        next();
-    })
-}
-
 
 /* EXPRESS SWAGGER CONFIGURATION */
 const SwaggerDocsCreator = (app: Express) => {
-    const ExpressSwagger = ExpressSwaggerGenerator(app);
-    EnableSwaggerOnBrowser(app);
-    ExpressSwagger(swaggerOptions);
+    //const ExpressSwagger = ExpressSwaggerGenerator(app);
+    //EnableSwaggerOnBrowser(app);
+    //ExpressSwagger(swaggerOptions);
 }
 
 export default SwaggerDocsCreator;
