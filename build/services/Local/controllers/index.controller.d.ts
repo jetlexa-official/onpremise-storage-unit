@@ -1,0 +1,12 @@
+import { SessionedAsyncControllerType } from "../../../interfaces/express.middlewares";
+export declare const GET_FILES_DIR: SessionedAsyncControllerType;
+export declare const GET_READ_FILE: SessionedAsyncControllerType;
+export declare const PUT_MOVE_FILE: SessionedAsyncControllerType;
+export declare const PUT_RENAME_FILE: SessionedAsyncControllerType;
+export declare const DELETE_REMOVE_FILE: SessionedAsyncControllerType;
+export declare const POST_UPLOAD_FILES_LOCAL: SessionedAsyncControllerType;
+export declare const GET_TEST_AUTHORIZATION: SessionedAsyncControllerType;
+export declare const GET_DOWNLOAD_FILE: SessionedAsyncControllerType;
+export declare const POST_CREATE_FOLDER: SessionedAsyncControllerType;
+export declare const DELETE_REMOVE_FOLDER: SessionedAsyncControllerType;
+export declare const HEALTH_CHECK: SessionedAsyncControllerType;
