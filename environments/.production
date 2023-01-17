@@ -14,7 +14,7 @@
 # ------------------------------------------------------------------------------
 ENDPOINT: https://cdnservices.jetlexa.com/
 HOSTNAME: https://cdnservices.jetlexa.com/api
-PORT: 80
+PORT: 8080
 LOGGER: dev
 HTTPS_ENABLED: false
 CURRENT_ENVIRONMENT: production
