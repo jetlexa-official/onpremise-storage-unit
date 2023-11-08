@@ -137,6 +137,52 @@ export const PUT_MOVE_FILE: SessionedAsyncControllerType = async (req, res) => {
         throw new ApiError(ApiErrorStore.FILE_NOT_FOUND);
     }
 }
+export const PUT_EXT_MOVE_FILE: SessionedAsyncControllerType = async (req, res) => {
+    const { key } = req.params;
+    const { newFolderKey } = req.body;
+    try {
+
+        const fileResponse = await req.jetlexaApi.get(`/cdn/ext/files/${key}`);
+        const newFolderResponse = await req.jetlexaApi.get(`/cdn/ext/folders/${newFolderKey}`);
+        const filePath = path.resolve(fileResponse?.data?.node?.file?.filePath);
+        const newFolderPath = path.resolve(newFolderResponse?.data?.node?.folder?.folderPath);
+        const newFilePath = path.resolve(path.join(newFolderResponse?.data?.node?.folder?.folderPath, fileResponse?.data?.node?.file?.filename));
+
+
+        if (!fs.existsSync(filePath)) {
+            throw new ApiError(ApiErrorStore.FILE_NOT_FOUND);
+        }
+
+        if (!fs.existsSync(newFolderPath)) {
+            fs.mkdirSync(newFolderPath);
+        }
+
+        fs.renameSync(filePath, newFilePath);
+
+        const dirname: string = path.join(__dirname, '../../../../', 'files', config?.COMPANY).toString();
+        const updateCDNFile = await req.jetlexaApi.put(`/cdn/files/${fileResponse?.data?.node?.file?.key}`, {
+            file: {
+                filePath: newFilePath,
+                folder: newFolderResponse?.data?.node?.folder?.key,
+            }
+        });
+
+        res.status(ApiSuccessStore.FILE_MOVED.status).json({
+            response: ApiSuccessStore.FILE_MOVED,
+            node: {
+                __dirname: dirname,
+                oldFilePath: filePath,
+                newFilePath: newFilePath,
+                newFolderPath: newFolderPath,
+                updatedFile: {
+                    ...updateCDNFile.data.node?.file,
+                }
+            }
+        })
+    } catch (error) {
+        throw new ApiError(ApiErrorStore.FILE_NOT_FOUND);
+    }
+}
 
 export const PUT_RENAME_FILE: SessionedAsyncControllerType = async (req, res) => {
     const { key } = req.params;
@@ -144,6 +190,50 @@ export const PUT_RENAME_FILE: SessionedAsyncControllerType = async (req, res) =>
     try {
 
         const fileResponse = await req.jetlexaApi.get(`/cdn/files/${key}`);
+        const filePath = path.resolve(fileResponse?.data?.node?.file?.filePath);
+        const extension = path.extname(filePath);
+        if (!filename.endsWith(extension)) {
+            filename = filename + extension;
+        }
+        const newFilePath = path.resolve(filePath.replace(fileResponse?.data?.node?.file?.filename, filename));
+
+        console.log("NEW_FILE_PATH::", newFilePath);
+
+        if (!fs.existsSync(filePath)) {
+            throw new ApiError(ApiErrorStore.FILE_NOT_FOUND);
+        }
+
+        fs.renameSync(filePath, newFilePath);
+
+        const dirname: string = path.join(__dirname, '../../../../', 'files', config?.COMPANY).toString();
+        const updateCDNFile = await req.jetlexaApi.put(`/cdn/files/${fileResponse?.data?.node?.file?.key}`, {
+            file: {
+                filePath: newFilePath,
+                filename: filename
+            }
+        });
+
+        res.status(ApiSuccessStore.FILE_RENAMED.status).json({
+            response: ApiSuccessStore.FILE_RENAMED,
+            node: {
+                __dirname: dirname,
+                oldFilePath: filePath,
+                newFilePath: newFilePath,
+                updatedFile: {
+                    ...updateCDNFile.data.node?.file,
+                }
+            }
+        })
+    } catch (error) {
+        throw new ApiError(ApiErrorStore.FILE_NOT_FOUND);
+    }
+}
+export const PUT_EXT_RENAME_FILE: SessionedAsyncControllerType = async (req, res) => {
+    const { key } = req.params;
+    let { filename } = req.body;
+    try {
+
+        const fileResponse = await req.jetlexaApi.get(`/cdn/ext/files/${key}`);
         const filePath = path.resolve(fileResponse?.data?.node?.file?.filePath);
         const extension = path.extname(filePath);
         if (!filename.endsWith(extension)) {
@@ -295,6 +385,86 @@ export const POST_UPLOAD_FILES_LOCAL: SessionedAsyncControllerType = async (req,
     }
 }
 
+export const POST_EXT_UPLOAD_FILES_LOCAL: SessionedAsyncControllerType = async (req, res) => {
+    try {
+        const files: any = req.files;
+        let { contract } = req.body;
+        console.log("DEFAULT_CONTRACT:::", contract)
+
+        const filesArray = (files || []).map((file: any, index: number) => {
+            console.log(index, ". FILE:::", file);
+            return {
+                filename: file?.filename,
+                folderPath: path.resolve(path.join(__dirname, '../../../../', 'files', config?.COMPANY, 'TMP')),
+                foldername: 'TMP',
+                filePath: path.resolve(path.join(__dirname, '../../../../', file?.path)),
+                fileSize: file?.size,
+                formattedFileSize: formatBytes(file?.size),
+                fileType: file?.mimetype
+                /* CONTINUE HERE */
+            }
+        });
+
+        let response = await req.jetlexaApi.post('/cdn/ext/files', {
+            files: filesArray
+        })
+        console.log("RESPONSE:", response?.data)
+
+        const filesResponse = await req.jetlexaApi.post('/cdn/ext/custom/files', {
+            files: response?.data?.node?.files.map((file: any) => {
+                return {
+                    ...file
+                }
+            })
+        });
+
+        const promises = filesArray.map((file: any, index: number) => {
+            return new Promise(async (resolve, reject) => {
+                const filePath = path.resolve(file?.filePath);
+                const newFilePath = path.resolve(path.join(file?.folderPath, filesResponse?.data?.node?.files[index]?.filename));
+                console.log("FILE_PATH_AFTER_UPLOAD:::", filePath);
+                console.log("NEW_FILE_PATH_AFTER_UPLOAD:::", newFilePath);
+                if (file) {
+                    if (!fs.existsSync(filePath)) {
+                        throw new ApiError(ApiErrorStore.FILE_NOT_FOUND);
+                    }
+
+                    fs.renameSync(filePath, newFilePath);
+                    const updateCDNFile = await req.jetlexaApi.put(`/cdn/ext/files/${filesResponse?.data?.node?.files[index]?.key}`, {
+                        file: {
+                            filePath: newFilePath,
+                            filename: filesResponse?.data?.node?.files[index]?.filename
+                        }
+                    });
+                    if (contract) {
+                        req?.jetlexaApi?.put(`/cdn/ext/files/contract/${filesResponse?.data?.node?.files[index]?.uid}`, {
+                            contract: contract
+                        }).then((res: any) => {
+                            console.log("DONE_ADDING_CONTRACT:::", true);
+                        }).catch((error: any) => {
+                            console.log("ERROR_ADDING_CONTRACT:::", error);
+                        });
+                    }
+                    resolve(true);
+
+                }
+            })
+        });
+
+        Promise.all(promises).then((res: any) => { }).catch((error: any) => { });
+
+        console.log("CREATE FILES:", filesResponse?.data)
+        res.status(ApiSuccessStore.FILES_CREATED.status).json({
+            response: ApiSuccessStore.FILES_CREATED,
+            node: {
+                files: filesResponse?.data?.node?.files
+            }
+        })
+    } catch (error) {
+        throw new ApiError(ApiErrorStore.FILES_NOT_UPLOADED);
+    }
+}
+
 export const GET_TEST_AUTHORIZATION: SessionedAsyncControllerType = async (req, res) => {
     res.json(req.user);
 }
@@ -303,6 +473,21 @@ export const GET_DOWNLOAD_FILE: SessionedAsyncControllerType = async (req, res) 
     const { key } = req.params;
     try {
         const response = await req?.jetlexaApi.get(`/cdn/files/${key}`);
+        const filePath = path.resolve(response?.data?.node?.file?.filePath);
+        if (fs.existsSync(filePath)) {
+            res.status(ApiSuccessStore.FILE_DOWNLOADED.status).download(filePath);
+        } else {
+            throw new ApiError(ApiErrorStore.FILE_NOT_FOUND);
+        }
+    } catch (error: any) {
+        console.log("ERROR::", error)
+        throw new ApiError(ApiErrorStore.FILE_NOT_FOUND);
+    }
+}
+export const GET_DOWNLOAD_EXT_FILE: SessionedAsyncControllerType = async (req, res) => {
+    const { key } = req.params;
+    try {
+        const response = await req?.jetlexaApi.get(`/cdn/ext/files/${key}`);
         const filePath = path.resolve(response?.data?.node?.file?.filePath);
         if (fs.existsSync(filePath)) {
             res.status(ApiSuccessStore.FILE_DOWNLOADED.status).download(filePath);
@@ -324,6 +509,35 @@ export const POST_CREATE_FOLDER: SessionedAsyncControllerType = async (req, res)
         try {
             fs.mkdirSync(folderPath);
             response = await req.jetlexaApi.post('/cdn/folders', {
+                folder: {
+                    foldername: foldername,
+                    folderPath: folderPath
+                }
+            });
+            res.status(ApiSuccessStore.FOLDER_CREATED.status).json({
+                response: ApiSuccessStore.FOLDER_CREATED,
+                node: {
+                    ...response?.data?.node
+                }
+            })
+        } catch (error) {
+            console.log("CUSTOM_CDN_FOLDER_CREATE_ERROR_1", error);
+            throw new ApiError(ApiErrorStore.CREATE_FOLDER_ERROR);
+        }
+    } else {
+        console.log("CUSTOM_CDN_FOLDER_CREATE_ERROR_2")
+        throw new ApiError(ApiErrorStore.CREATE_FOLDER_ERROR);
+    }
+}
+export const POST_EXT_CREATE_FOLDER: SessionedAsyncControllerType = async (req, res) => {
+    const { foldername } = req.body;
+    const folderPath = path.resolve(path.join(__dirname, '../../../../', 'files', config?.COMPANY, foldername));
+
+    if (!fs.existsSync(folderPath)) {
+        let response: AxiosResponse | null = null;
+        try {
+            fs.mkdirSync(folderPath);
+            response = await req.jetlexaApi.post('/cdn/ext/folders', {
                 folder: {
                     foldername: foldername,
                     folderPath: folderPath

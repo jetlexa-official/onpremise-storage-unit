@@ -5,9 +5,9 @@ type ICDNConfig = {
 }
 
 const config: ICDNConfig = {
-    COMPANY: "",
-    COMPANY_NAME: "",
-    END_POINT: "",
+    COMPANY: "62acf9f6b8b4de6d72549e39",
+    COMPANY_NAME: "Dev Co",
+    END_POINT: "http://localhost/api",
 }
 
 export default config;
