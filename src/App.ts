@@ -70,7 +70,7 @@ app.use(express.urlencoded({
 /* AUTHORIZATION MIDDLEWARE */
 //app.use(passport.initialize())
 
-app.use(authorizeRequest);
+//app.use(authorizeRequest);
 
 /* ROUTER */
 /* PUBLIC FILES STATIC SERVING */
